@@ -1,6 +1,10 @@
-import 'dotenv/config'
+import dotenv from 'dotenv'
 import { resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { z } from 'zod'
+
+const backendDirectory = resolve(fileURLToPath(new URL('../..', import.meta.url)))
+dotenv.config({ path: resolve(backendDirectory, '.env') })
 
 const schema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
@@ -19,7 +23,7 @@ if (!parsed.success) {
 
 export const config = {
   ...parsed.data,
-  mediaDirectory: resolve(parsed.data.MEDIA_STORAGE_DIR),
+  mediaDirectory: resolve(backendDirectory, parsed.data.MEDIA_STORAGE_DIR),
   secureCookies: parsed.data.NODE_ENV === 'production',
   mediaStorageConfigured: true,
 }
