@@ -29,7 +29,15 @@ const isAllowedOrigin = (origin) => allowedOrigins.has(origin)
 app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }))
 app.use((req, res, next) => {
   const origin = req.get('origin')
-  if (origin && !isAllowedOrigin(origin)) return res.status(403).json({ error: 'Origin not allowed.' })
+  if (origin && !isAllowedOrigin(origin)) {
+    console.warn('Rejected request with unconfigured Origin.', {
+      method: req.method,
+      path: req.path,
+      origin,
+      allowedOrigins: [...allowedOrigins],
+    })
+    return res.status(403).json({ error: 'Origin not allowed.' })
+  }
   next()
 })
 app.use(cors({
