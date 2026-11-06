@@ -13,7 +13,7 @@ import { ensureMediaStorageDirectory } from './infrastructure/storage/local-imag
 const app = express()
 app.disable('x-powered-by')
 app.set('trust proxy', config.NODE_ENV === 'production' ? 1 : false)
-const allowedOrigins = new Set([config.APP_ORIGIN])
+const allowedOrigins = new Set([new URL(config.APP_ORIGIN).origin])
 if (config.NODE_ENV === 'development') {
   const configuredOrigin = new URL(config.APP_ORIGIN)
   const loopbackHosts = new Set(['localhost', '127.0.0.1'])
